@@ -33,7 +33,7 @@ function MatrixMul(a,b) //Mnożenie macierzy
 
 function startGL() 
 {
-  alert("StartGL");
+  //alert("StartGL");
   let canvas = document.getElementById("canvas3D"); //wyszukanie obiektu w strukturze strony 
   gl = canvas.getContext("experimental-webgl"); //pobranie kontekstu OpenGL'u z obiektu canvas
   gl.viewportWidth = canvas.width; //przypisanie wybranej przez nas rozdzielczości do systemu OpenGL
@@ -129,7 +129,7 @@ function startGL()
     0.2, 1.0, 1.0,  0.2, 1.0, 1.0,  0.3, 1.0, 1.0,
     0.0, 0.4, 0.8,  0.4, 0.3, 0.2,  0.2, 0.4, 0.3,
   ]
-  
+
   vertexColorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColor), gl.STATIC_DRAW);
