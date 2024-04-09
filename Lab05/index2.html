@@ -163,15 +163,15 @@ function startGL()
   let stepElevation = 90/6;
   let stepAngle = 360/12;
 
-  let vertexPosition = createPlanet(0.1,0); //sun
-  let vertexPosition2 = createPlanet(0.00352, 0.103); //mercury
-  let vertexPosition3 = createPlanet(0.00869, 0.192); //venus 
-  let vertexPosition4 = createPlanet(0.00916, 0.266); //earth
-  let vertexPosition5 = createPlanet(0.00488, 0.405); //mars
-  let vertexPosition6 = createPlanet(0.102, 1.384); //jupiter
-  let vertexPosition7 = createPlanet(0.0866, 2.539); //saturn
-  let vertexPosition8 = createPlanet(0.0366, 5.1); //uranus
-  let vertexPosition9 = createPlanet(0.036, 8); //neptune
+  let vertexPosition = createPlanet(0.1*10,-5-10); //sun
+  let vertexPosition2 = createPlanet(0.00352*10, -3.8-10); //mercury
+  let vertexPosition3 = createPlanet(0.00869*10, -3.5-10); //venus 
+  let vertexPosition4 = createPlanet(0.00916*10, -3-10); //earth
+  let vertexPosition5 = createPlanet(0.00488*10, -2.5-10); //mars
+  let vertexPosition6 = createPlanet(0.102*10, 1.384*2-10); //jupiter
+  let vertexPosition7 = createPlanet(0.0866*10, 2.539*2.5-10); //saturn
+  let vertexPosition8 = createPlanet(0.0366*10, 5.1*2-10); //uranus
+  let vertexPosition9 = createPlanet(0.036*10, 8*2-10); //neptune
   
   vertexPositionBuffer = gl.createBuffer(); //Stworzenie tablicy w pamieci karty graficznej
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
@@ -378,7 +378,7 @@ function startGL()
 var angleZ = 0.0;
 var angleY = 0.0;
 var angleX = 0.0;
-var tz = -30.0;
+var tz = -23.0;
 function Tick()
 {  
   let uMVMatrix = [
@@ -424,7 +424,7 @@ function Tick()
   
   //Render Scene
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight); 
-  gl.clearColor(1.0,0.0,0.0,1.0); //Wyczyszczenie obrazu kolorem czerwonym
+  gl.clearColor(0.1, 0.1, 0.1, 1.0); //Wyczyszczenie obrazu kolorem czerwonym
   gl.clearDepth(1.0);             //Wyczyścienie bufora głebi najdalszym planem
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.useProgram(shaderProgram)   //Użycie przygotowanego programu shaderowego
@@ -542,6 +542,6 @@ function handlekeydown(e)
 </script>
 </head>
 <body onload="startGL()" onkeydown="handlekeydown(event)">
-<canvas id="canvas3D" width="1920" height="1080" style="border: solid black 1px"></canvas>
+<canvas id="canvas3D" width="1800" height="900" style="border: solid black 1px"></canvas>
 </body>
 </html>
