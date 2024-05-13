@@ -1,3 +1,15 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+var gl;
+var shaderProgram;
+var uPMatrix;
+var vertexPositionBuffer;
+var vertexColorBuffer;
+var vertexCoordsBuffer;
+var vertexNormalBuffer;
+
 function MatrixMul(a,b) //Mnożenie macierzy
 {
   let c = [
@@ -464,11 +476,11 @@ function handlekeydown(e)
  if(e.keyCode==85) lightZ=lightZ+0.1;
  if(e.keyCode==79) lightZ=lightZ-0.1;
 }
-&lt;/script&gt;
-&lt;/head&gt;
-&lt;body onload="startGL()" onkeydown="handlekeydown(event)"&gt;
-&lt;canvas id="canvas3D" width="640" height="480" style="border: solid black 1px"&gt;&lt;/canvas&gt;
-&lt;img id="textureImg" src="earth.jpg"&gt;
-&lt;img id="textureImg2" src="mars.jpg"&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+</script>
+</head>
+<body onload="startGL()" onkeydown="handlekeydown(event)">
+<canvas id="canvas3D" width="640" height="480" style="border: solid black 1px"></canvas>
+<img id="textureImg" src="earth.jpg">
+<img id="textureImg2" src="mars.jpg">
+</body>
+</html>
