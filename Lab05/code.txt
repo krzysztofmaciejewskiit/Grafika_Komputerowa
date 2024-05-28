@@ -378,6 +378,16 @@ function startGL()
 } 
 //let angle = 45.0; //Macierz transformacji świata - określenie położenia kamery
 
+var angleY1 = 0.0;
+var angleY2 = 0.0;
+var angleY3 = 0.0;
+var angleY4 = 0.0;
+var angleY5 = 0.0;
+var angleY6 = 0.0;
+var angleY7 = 0.0;
+var angleY8 = 0.0;
+var angleY9 = 0.0;
+
 var angleZ = 0.0;
 var angleY = 0.0;
 var angleX = 0.0;
@@ -436,6 +446,15 @@ var lightZ = 0;
 function Tick()
 {  
   angleY -= 1.0; // Zawsze obracaj w lewo
+  angleY1 -= 0.0;
+  angleY2 -= 2.0;
+  angleY3 -= 3.0;
+  angleY4 -= 1.0;
+  angleY5 -= 3.0;
+  angleY6 -= 4.0;
+  angleY7 -= 1.0;
+  angleY8 -= 3.5;
+  angleY9 -= 3.2; 
 
   let uMVMatrix1 = [
   1,0,0,0, //Macierz jednostkowa
@@ -589,6 +608,69 @@ function Tick()
   +Math.sin(angleY*Math.PI/180.0),0,+Math.cos(angleY*Math.PI/180.0),0,
   0,0,0,1
   ];
+
+  let uMVRotY1 = [
+  +Math.cos(angleY1*Math.PI/180.0),0,-Math.sin(angleY1*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY1*Math.PI/180.0),0,+Math.cos(angleY1*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY2 = [
+  +Math.cos(angleY2*Math.PI/180.0),0,-Math.sin(angleY2*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY2*Math.PI/180.0),0,+Math.cos(angleY2*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY3 = [
+  +Math.cos(angleY3*Math.PI/180.0),0,-Math.sin(angleY3*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY3*Math.PI/180.0),0,+Math.cos(angleY3*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY4 = [
+  +Math.cos(angleY4*Math.PI/180.0),0,-Math.sin(angleY4*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY4*Math.PI/180.0),0,+Math.cos(angleY4*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY5 = [
+  +Math.cos(angleY5*Math.PI/180.0),0,-Math.sin(angleY5*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY5*Math.PI/180.0),0,+Math.cos(angleY5*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY6 = [
+  +Math.cos(angleY6*Math.PI/180.0),0,-Math.sin(angleY6*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY6*Math.PI/180.0),0,+Math.cos(angleY6*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY7 = [
+  +Math.cos(angleY7*Math.PI/180.0),0,-Math.sin(angleY7*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY7*Math.PI/180.0),0,+Math.cos(angleY7*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY8 = [
+  +Math.cos(angleY8*Math.PI/180.0),0,-Math.sin(angleY8*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY8*Math.PI/180.0),0,+Math.cos(angleY8*Math.PI/180.0),0,
+  0,0,0,1
+  ];
+
+  let uMVRotY9 = [
+  +Math.cos(angleY9*Math.PI/180.0),0,-Math.sin(angleY9*Math.PI/180.0),0,
+  0,1,0,0,
+  +Math.sin(angleY9*Math.PI/180.0),0,+Math.cos(angleY9*Math.PI/180.0),0,
+  0,0,0,1
+  ];
   
   let uMVRotX = [
   1,0,0,0,
@@ -733,65 +815,66 @@ function Tick()
   uMVMatrix1 = MatrixMul(uMVMatrix1,uMVScale1);
   uMVMatrix1 = MatrixMul(uMVMatrix1,uMVObject1);
   uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotX);
-  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotY);
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotY1);
   uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotZ);
   uMVMatrix1 = MatrixMul(uMVMatrix1,uMVTranslateZ);
   
   uMVMatrix2 = MatrixMul(uMVMatrix2,uMVScale2);
   uMVMatrix2 = MatrixMul(uMVMatrix2,uMVObject2);
   uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotX);
-  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotY);
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotY2);
   uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotZ);
   uMVMatrix2 = MatrixMul(uMVMatrix2,uMVTranslateZ);
 
   uMVMatrix3 = MatrixMul(uMVMatrix3,uMVScale3);
   uMVMatrix3 = MatrixMul(uMVMatrix3,uMVObject3);
   uMVMatrix3 = MatrixMul(uMVMatrix3,uMVRotX);
-  uMVMatrix3 = MatrixMul(uMVMatrix3,uMVRotY);
+  uMVMatrix3 = MatrixMul(uMVMatrix3,uMVRotY3);
   uMVMatrix3 = MatrixMul(uMVMatrix3,uMVRotZ);
   uMVMatrix3 = MatrixMul(uMVMatrix3,uMVTranslateZ);
 
   uMVMatrix4 = MatrixMul(uMVMatrix4,uMVScale4);
   uMVMatrix4 = MatrixMul(uMVMatrix4,uMVObject4);
   uMVMatrix4 = MatrixMul(uMVMatrix4,uMVRotX);
-  uMVMatrix4 = MatrixMul(uMVMatrix4,uMVRotY);
+  uMVMatrix4 = MatrixMul(uMVMatrix4,uMVRotY4);
   uMVMatrix4 = MatrixMul(uMVMatrix4,uMVRotZ);
   uMVMatrix4 = MatrixMul(uMVMatrix4,uMVTranslateZ);
 
   uMVMatrix5 = MatrixMul(uMVMatrix5,uMVScale5);
   uMVMatrix5 = MatrixMul(uMVMatrix5,uMVObject5);
   uMVMatrix5 = MatrixMul(uMVMatrix5,uMVRotX);
-  uMVMatrix5 = MatrixMul(uMVMatrix5,uMVRotY);
+  uMVMatrix5 = MatrixMul(uMVMatrix5,uMVRotY5);
   uMVMatrix5 = MatrixMul(uMVMatrix5,uMVRotZ);
   uMVMatrix5 = MatrixMul(uMVMatrix5,uMVTranslateZ);
 
   uMVMatrix6 = MatrixMul(uMVMatrix6,uMVScale6);
   uMVMatrix6 = MatrixMul(uMVMatrix6,uMVObject6);
   uMVMatrix6 = MatrixMul(uMVMatrix6,uMVRotX);
-  uMVMatrix6 = MatrixMul(uMVMatrix6,uMVRotY);
+  uMVMatrix6 = MatrixMul(uMVMatrix6,uMVRotY6);
   uMVMatrix6 = MatrixMul(uMVMatrix6,uMVRotZ);
   uMVMatrix6 = MatrixMul(uMVMatrix6,uMVTranslateZ);
 
   uMVMatrix7 = MatrixMul(uMVMatrix7,uMVScale7);
   uMVMatrix7 = MatrixMul(uMVMatrix7,uMVObject7);
   uMVMatrix7 = MatrixMul(uMVMatrix7,uMVRotX);
-  uMVMatrix7 = MatrixMul(uMVMatrix7,uMVRotY);
+  uMVMatrix7 = MatrixMul(uMVMatrix7,uMVRotY7);
   uMVMatrix7 = MatrixMul(uMVMatrix7,uMVRotZ);
   uMVMatrix7 = MatrixMul(uMVMatrix7,uMVTranslateZ);
 
   uMVMatrix8 = MatrixMul(uMVMatrix8,uMVScale8);
   uMVMatrix8 = MatrixMul(uMVMatrix8,uMVObject8);
   uMVMatrix8 = MatrixMul(uMVMatrix8,uMVRotX);
-  uMVMatrix8 = MatrixMul(uMVMatrix8,uMVRotY);
+  uMVMatrix8 = MatrixMul(uMVMatrix8,uMVRotY8);
   uMVMatrix8 = MatrixMul(uMVMatrix8,uMVRotZ);
   uMVMatrix8 = MatrixMul(uMVMatrix8,uMVTranslateZ);
 
   uMVMatrix9 = MatrixMul(uMVMatrix9,uMVScale9);
   uMVMatrix9 = MatrixMul(uMVMatrix9,uMVObject9);
   uMVMatrix9 = MatrixMul(uMVMatrix9,uMVRotX);
-  uMVMatrix9 = MatrixMul(uMVMatrix9,uMVRotY);
+  uMVMatrix9 = MatrixMul(uMVMatrix9,uMVRotY9);
   uMVMatrix9 = MatrixMul(uMVMatrix9,uMVRotZ);
   uMVMatrix9 = MatrixMul(uMVMatrix9,uMVTranslateZ);
+
   
   //alert(uPMatrix);
   
@@ -900,4 +983,4 @@ function handlekeydown(e)
 <body onload="startGL()" onkeydown="handlekeydown(event)">
 <canvas id="canvas3D" width="2120" height="1040" style="border: solid black 1px"></canvas>
 </body>
-</html>
+</html> 
