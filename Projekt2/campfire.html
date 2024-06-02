@@ -12,7 +12,6 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/GLTFLoader.js"></script>
     <script>
         // Scene setup
         const scene = new THREE.Scene();
@@ -33,7 +32,7 @@
 
         // Ground (grass)
         const groundGeometry = new THREE.PlaneGeometry(100, 100);
-        const groundTexture = new THREE.TextureLoader().load('textures/grass.jpg');
+        const groundTexture = new THREE.TextureLoader().load('grass.png');
         groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
         groundTexture.repeat.set(10, 10);
         const groundMaterial = new THREE.MeshLambertMaterial({ map: groundTexture });
@@ -62,17 +61,6 @@
             const stone = new THREE.Mesh(stoneGeometry, stoneMaterial);
             stone.position.set(Math.cos(angle) * 2.5, 0.25, Math.sin(angle) * 2.5);
             scene.add(stone);
-        }
-
-        // Placeholder for trees (use GLTFLoader to load external models if necessary)
-        const treeGeometry = new THREE.ConeGeometry(1, 5, 8);
-        const treeMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
-        const numTrees = 20;
-        for (let i = 0; i < numTrees; i++) {
-            const angle = (i / numTrees) * Math.PI * 2;
-            const tree = new THREE.Mesh(treeGeometry, treeMaterial);
-            tree.position.set(Math.cos(angle) * 15, 2.5, Math.sin(angle) * 15);
-            scene.add(tree);
         }
 
         // Camera position
