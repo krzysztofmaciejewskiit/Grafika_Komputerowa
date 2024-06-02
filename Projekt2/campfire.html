@@ -76,18 +76,18 @@
         const particleVelocities = new Float32Array(particleCount * 3);
 
         for (let i = 0; i < particleCount; i++) {
-            const angle = (Math.random() - 0.5) * Math.PI * 0.2;
-            const radius = Math.random() * 1;
+            const angle = (Math.random() - 0.5) * Math.PI * 0.6; // Wider spread
+            const radius = Math.random() * 1.5; // Increase radius
             const x = Math.cos(angle) * radius;
-            const y = Math.random() * 3;
+            const y = Math.random() * 2;
             const z = Math.sin(angle) * radius;
             particlePositions[i * 3] = x;
             particlePositions[i * 3 + 1] = y;
             particlePositions[i * 3 + 2] = z;
 
-            particleVelocities[i * 3] = x * 0.01;
-            particleVelocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
-            particleVelocities[i * 3 + 2] = z * 0.01;
+            particleVelocities[i * 3] = x * 0.02; // Increase horizontal spread speed
+            particleVelocities[i * 3 + 1] = 0.06 + Math.random() * 0.02; // Increase rise speed
+            particleVelocities[i * 3 + 2] = z * 0.02;
         }
 
         particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
@@ -114,16 +114,16 @@
         const smokeVelocities = new Float32Array(smokeParticleCount * 3);
 
         for (let i = 0; i < smokeParticleCount; i++) {
-            const x = (Math.random() - 0.5) * 0.5;
-            const y = Math.random() * 2;
-            const z = (Math.random() - 0.5) * 0.5;
+            const x = (Math.random() - 0.5) * 1;
+            const y = Math.random() * 2 + 2; // Higher initial position
+            const z = (Math.random() - 0.5) * 1;
             smokePositions[i * 3] = x;
             smokePositions[i * 3 + 1] = y;
             smokePositions[i * 3 + 2] = z;
 
-            smokeVelocities[i * 3] = x * 0.005;
-            smokeVelocities[i * 3 + 1] = 0.02 + Math.random() * 0.01;
-            smokeVelocities[i * 3 + 2] = z * 0.005;
+            smokeVelocities[i * 3] = x * 0.01; // More horizontal spread
+            smokeVelocities[i * 3 + 1] = 0.02 + Math.random() * 0.02; // Slightly faster rise
+            smokeVelocities[i * 3 + 2] = z * 0.01;
         }
 
         smokeGeometry.setAttribute('position', new THREE.BufferAttribute(smokePositions, 3));
@@ -131,7 +131,7 @@
 
         const smokeMaterial = new THREE.PointsMaterial({
             color: 0xaaaaaa,
-            size: 0.5,
+            size: 1,
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,
@@ -163,13 +163,13 @@
                 positions[i * 3 + 2] += velocities[i * 3 + 2];
 
                 if (positions[i * 3 + 1] > 3) {
-                    positions[i * 3] = (Math.random() - 0.5) * 1;
+                    positions[i * 3] = (Math.random() - 0.5) * 1.5;
                     positions[i * 3 + 1] = 0;
-                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
 
-                    velocities[i * 3] = (Math.random() - 0.5) * 0.02;
-                    velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
-                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+                    velocities[i * 3] = (Math.random() - 0.5) * 0.04;
+                    velocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
+                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
                 }
             }
             particles.attributes.position.needsUpdate = true;
@@ -183,14 +183,14 @@
                 positions[i * 3 + 1] += velocities[i * 3 + 1];
                 positions[i * 3 + 2] += velocities[i * 3 + 2];
 
-                if (positions[i * 3 + 1] > 5) {
-                    positions[i * 3] = (Math.random() - 0.5) * 0.5;
-                    positions[i * 3 + 1] = 0;
-                    positions[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
+                if (positions[i * 3 + 1] > 10) { // Increase height limit for smoke
+                    positions[i * 3] = (Math.random() - 0.5) * 1;
+                    positions[i * 3 + 1] = 2; // Reset to higher initial position
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
 
-                    velocities[i * 3] = (Math.random() - 0.5) * 0.005;
-                    velocities[i * 3 + 1] = 0.02 + Math.random() * 0.01;
-                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.005;
+                    velocities[i * 3] = (Math.random() - 0.5) * 0.01;
+                    velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
+                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
                 }
             }
             smokeGeometry.attributes.position.needsUpdate = true;
