@@ -1,0 +1,3 @@
+Jak działa shader:
+Vertex Shader: Modyfikuje pozycje wierzchołków wzdłuż osi Z na podstawie współrzędnych UV i czasu, tworząc falujący efekt.
+Fragment Shader: Wyświetla teksturę trawy.
