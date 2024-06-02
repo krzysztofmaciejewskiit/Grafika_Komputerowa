@@ -31,17 +31,31 @@
         directionalLight.position.set(5, 10, 7.5);
         scene.add(directionalLight);
 
-        // Placeholder for firewood
+        // Firewood arranged in a crisscross pattern with a slight angle
         const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
         const woodMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
-        const numLogs = 5;
-        for (let i = 0; i < numLogs; i++) {
-            const angle = (i / numLogs) * Math.PI * 2;
+        
+        // Positions and rotations for the logs
+        const logPositions = [
+            { x: -0.5, y: 0.25, z: -0.5, rx: Math.PI / 4, rz: Math.PI / 4 },
+            { x: 0.5, y: 0.25, z: -0.5, rx: Math.PI / 4, rz: -Math.PI / 4 },
+            { x: -0.5, y: 0.25, z: 0.5, rx: Math.PI / 4, rz: -Math.PI / 4 },
+            { x: 0.5, y: 0.25, z: 0.5, rx: Math.PI / 4, rz: Math.PI / 4 },
+            { x: 0, y: 0.25, z: 0, rx: Math.PI / 4, rz: 0 },
+            // Additional logs for a better campfire effect
+            { x: -0.6, y: 0.25, z: -0.6, rx: Math.PI / 6, rz: Math.PI / 6 },
+            { x: 0.6, y: 0.25, z: -0.6, rx: Math.PI / 6, rz: -Math.PI / 6 },
+            { x: -0.6, y: 0.25, z: 0.6, rx: Math.PI / 6, rz: -Math.PI / 6 },
+            { x: 0.6, y: 0.25, z: 0.6, rx: Math.PI / 6, rz: Math.PI / 6 },
+            { x: 0, y: 0.25, z: 0, rx: Math.PI / 6, rz: 0 }
+        ];
+
+        logPositions.forEach(pos => {
             const log = new THREE.Mesh(woodGeometry, woodMaterial);
-            log.position.set(Math.cos(angle) * 1.5, 1.5, Math.sin(angle) * 1.5);
-            log.rotation.z = angle;
+            log.position.set(pos.x, pos.y, pos.z);
+            log.rotation.set(pos.rx, 0, pos.rz);
             scene.add(log);
-        }
+        });
 
         // Placeholder for stones around fire
         const stoneGeometry = new THREE.SphereGeometry(0.5, 16, 16);
@@ -56,22 +70,24 @@
 
         // Fire particle system
         const fireParticles = new THREE.Group();
-        const particleCount = 200;
+        const particleCount = 400;
         const particles = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
         const particleVelocities = new Float32Array(particleCount * 3);
 
         for (let i = 0; i < particleCount; i++) {
-            const x = (Math.random() - 0.5) * 1;
-            const y = Math.random() * 2;
-            const z = (Math.random() - 0.5) * 1;
+            const angle = (Math.random() - 0.5) * Math.PI * 0.2;
+            const radius = Math.random() * 1;
+            const x = Math.cos(angle) * radius;
+            const y = Math.random() * 3;
+            const z = Math.sin(angle) * radius;
             particlePositions[i * 3] = x;
             particlePositions[i * 3 + 1] = y;
             particlePositions[i * 3 + 2] = z;
 
-            particleVelocities[i * 3] = (Math.random() - 0.5) * 0.02;
-            particleVelocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
-            particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+            particleVelocities[i * 3] = x * 0.01;
+            particleVelocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
+            particleVelocities[i * 3 + 2] = z * 0.01;
         }
 
         particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
@@ -79,7 +95,7 @@
 
         const particleMaterial = new THREE.PointsMaterial({
             color: 0xffaa33,
-            size: 0.2,
+            size: 0.3,
             transparent: true,
             opacity: 0.8,
             blending: THREE.AdditiveBlending,

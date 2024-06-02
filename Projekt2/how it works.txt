@@ -1,3 +1,72 @@
-Jak działa shader:
-Vertex Shader: Modyfikuje pozycje wierzchołków wzdłuż osi Z na podstawie współrzędnych UV i czasu, tworząc falujący efekt.
-Fragment Shader: Wyświetla teksturę trawy.
+Tak, to co robisz w swoim projekcie to użycie techniki "point-sprite" do renderowania ognia. Point-sprites to punkty w przestrzeni 3D, które są renderowane jako małe obrazki lub tekstury. W Twoim przypadku, cząsteczki ognia są reprezentowane przez punkty (THREE.Points), które mają przypisany materiał (THREE.PointsMaterial).
+
+Oto jak to działa w Twoim kodzie:
+Tworzenie Geometrii:
+const particles = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleVelocities = new Float32Array(particleCount * 3);
+
+for (let i = 0; i < particleCount; i++) {
+    const x = (Math.random() - 0.5) * 1;
+    const y = Math.random() * 2;
+    const z = (Math.random() - 0.5) * 1;
+    particlePositions[i * 3] = x;
+    particlePositions[i * 3 + 1] = y;
+    particlePositions[i * 3 + 2] = z;
+
+    particleVelocities[i * 3] = (Math.random() - 0.5) * 0.02;
+    particleVelocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
+    particleVelocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+}
+
+particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+particles.setAttribute('velocity', new THREE.BufferAttribute(particleVelocities, 3));
+Tworzysz geometrię dla cząsteczek ognia z losowo rozmieszczonymi pozycjami i prędkościami.
+
+Tworzenie Materiału:
+const particleMaterial = new THREE.PointsMaterial({
+    color: 0xffaa33,
+    size: 0.2,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+});
+Materiał THREE.PointsMaterial definiuje wygląd cząsteczek, w tym kolor, rozmiar, przezroczystość i sposób mieszania.
+
+Tworzenie Systemu Cząsteczek:
+const particleSystem = new THREE.Points(particles, particleMaterial);
+fireParticles.add(particleSystem);
+scene.add(fireParticles);
+System cząsteczek jest tworzony jako THREE.Points i dodawany do sceny.
+
+Aktualizacja Pozycji Cząsteczek:
+function updateParticles() {
+    const positions = particles.attributes.position.array;
+    const velocities = particles.attributes.velocity.array;
+    for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] += velocities[i * 3];
+        positions[i * 3 + 1] += velocities[i * 3 + 1];
+        positions[i * 3 + 2] += velocities[i * 3 + 2];
+
+        if (positions[i * 3 + 1] > 3) {
+            positions[i * 3] = (Math.random() - 0.5) * 1;
+            positions[i * 3 + 1] = 0;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
+
+            velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+            velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+        }
+    }
+    particles.attributes.position.needsUpdate = true;
+}
+Funkcja updateParticles aktualizuje pozycje cząsteczek na podstawie ich prędkości, symulując efekt unoszenia się ognia.
+
+Technika point-sprite jest bardzo efektywna do tworzenia realistycznych efektów cząsteczkowych przy niskim obciążeniu obliczeniowym, co jest idealne do symulacji takich efektów jak ogień w Twoim projekcie.
+
+
+
+
+
+
