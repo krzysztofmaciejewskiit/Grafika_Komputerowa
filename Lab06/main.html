@@ -56,7 +56,7 @@
         // Satellite
         const objLoader = new THREE.OBJLoader();
         let satellite;
-        objLoader.load('satelita.obj', (object) => {
+        objLoader.load('satelite.obj', (object) => {
             const material = new THREE.MeshLambertMaterial({ color: 0x808080, side: THREE.DoubleSide }); // Gray material with double side
             object.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
