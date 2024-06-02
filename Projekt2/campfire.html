@@ -106,6 +106,42 @@
         fireParticles.add(particleSystem);
         scene.add(fireParticles);
 
+        // Smoke particle system
+        const smokeParticles = new THREE.Group();
+        const smokeParticleCount = 200;
+        const smokeGeometry = new THREE.BufferGeometry();
+        const smokePositions = new Float32Array(smokeParticleCount * 3);
+        const smokeVelocities = new Float32Array(smokeParticleCount * 3);
+
+        for (let i = 0; i < smokeParticleCount; i++) {
+            const x = (Math.random() - 0.5) * 0.5;
+            const y = Math.random() * 2;
+            const z = (Math.random() - 0.5) * 0.5;
+            smokePositions[i * 3] = x;
+            smokePositions[i * 3 + 1] = y;
+            smokePositions[i * 3 + 2] = z;
+
+            smokeVelocities[i * 3] = x * 0.005;
+            smokeVelocities[i * 3 + 1] = 0.02 + Math.random() * 0.01;
+            smokeVelocities[i * 3 + 2] = z * 0.005;
+        }
+
+        smokeGeometry.setAttribute('position', new THREE.BufferAttribute(smokePositions, 3));
+        smokeGeometry.setAttribute('velocity', new THREE.BufferAttribute(smokeVelocities, 3));
+
+        const smokeMaterial = new THREE.PointsMaterial({
+            color: 0xaaaaaa,
+            size: 0.5,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const smokeSystem = new THREE.Points(smokeGeometry, smokeMaterial);
+        smokeParticles.add(smokeSystem);
+        scene.add(smokeParticles);
+
         // Camera position
         camera.position.set(0, 10, 20);
 
@@ -113,11 +149,12 @@
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
-            updateParticles();
+            updateFireParticles();
+            updateSmokeParticles();
             renderer.render(scene, camera);
         }
 
-        function updateParticles() {
+        function updateFireParticles() {
             const positions = particles.attributes.position.array;
             const velocities = particles.attributes.velocity.array;
             for (let i = 0; i < particleCount; i++) {
@@ -136,6 +173,27 @@
                 }
             }
             particles.attributes.position.needsUpdate = true;
+        }
+
+        function updateSmokeParticles() {
+            const positions = smokeGeometry.attributes.position.array;
+            const velocities = smokeGeometry.attributes.velocity.array;
+            for (let i = 0; i < smokeParticleCount; i++) {
+                positions[i * 3] += velocities[i * 3];
+                positions[i * 3 + 1] += velocities[i * 3 + 1];
+                positions[i * 3 + 2] += velocities[i * 3 + 2];
+
+                if (positions[i * 3 + 1] > 5) {
+                    positions[i * 3] = (Math.random() - 0.5) * 0.5;
+                    positions[i * 3 + 1] = 0;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
+
+                    velocities[i * 3] = (Math.random() - 0.5) * 0.005;
+                    velocities[i * 3 + 1] = 0.02 + Math.random() * 0.01;
+                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.005;
+                }
+            }
+            smokeGeometry.attributes.position.needsUpdate = true;
         }
 
         animate();
