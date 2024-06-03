@@ -71,6 +71,7 @@
         // Fire particle system
         const fireParticles = new THREE.Group();
         const particleCount = 400;
+        const fireTexture = new THREE.TextureLoader().load('textures/fire.png');
         const particles = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
         const particleVelocities = new Float32Array(particleCount * 3);
@@ -95,6 +96,7 @@
 
         const particleMaterial = new THREE.PointsMaterial({
             color: 0xffaa33,
+            map: fireTexture,
             size: 0.3,
             transparent: true,
             opacity: 0.8,
@@ -108,7 +110,8 @@
 
         // Smoke particle system
         const smokeParticles = new THREE.Group();
-        const smokeParticleCount = 200;
+        const smokeParticleCount = 1000;
+        const smokeTexture = new THREE.TextureLoader().load('textures/smoke2.png');
         const smokeGeometry = new THREE.BufferGeometry();
         const smokePositions = new Float32Array(smokeParticleCount * 3);
         const smokeVelocities = new Float32Array(smokeParticleCount * 3);
@@ -131,7 +134,8 @@
 
         const smokeMaterial = new THREE.PointsMaterial({
             color: 0xaaaaaa,
-            size: 1,
+            map:smokeTexture,
+            size: 0.5,
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,
