@@ -72,6 +72,11 @@
         const fireParticles = new THREE.Group();
         const particleCount = 400;
         const fireTexture = new THREE.TextureLoader().load('textures/fire.png');
+        fireTexture.wrapS = THREE.RepeatWrapping;
+        fireTexture.wrapT = THREE.RepeatWrapping;
+        const fireColumns = 4; // Number of columns in the sprite sheet
+        const fireRows = 4; // Number of rows in the sprite sheet
+        const totalFireFrames = fireColumns * fireRows;
         const particles = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
         const particleVelocities = new Float32Array(particleCount * 3);
@@ -97,9 +102,9 @@
         const particleMaterial = new THREE.PointsMaterial({
             color: 0xffaa33,
             map: fireTexture,
-            size: 0.3,
+            size: 0.6,
             transparent: true,
-            opacity: 0.8,
+            opacity: 1,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
@@ -107,11 +112,17 @@
         const particleSystem = new THREE.Points(particles, particleMaterial);
         fireParticles.add(particleSystem);
         scene.add(fireParticles);
+        updateUVs(particleMaterial, 0, fireColumns, fireRows);
 
         // Smoke particle system
         const smokeParticles = new THREE.Group();
-        const smokeParticleCount = 1000;
-        const smokeTexture = new THREE.TextureLoader().load('textures/smoke2.png');
+        const smokeParticleCount = 100;
+        const smokeTexture = new THREE.TextureLoader().load('textures/Smoke.png');
+        smokeTexture.wrapS = THREE.RepeatWrapping;
+        smokeTexture.wrapT = THREE.RepeatWrapping;
+        const smokeColumns = 6; // Number of columns in the sprite sheet
+        const smokeRows = 5; // Number of rows in the sprite sheet
+        const totalSmokeFrames = smokeColumns * smokeRows;
         const smokeGeometry = new THREE.BufferGeometry();
         const smokePositions = new Float32Array(smokeParticleCount * 3);
         const smokeVelocities = new Float32Array(smokeParticleCount * 3);
@@ -135,7 +146,7 @@
         const smokeMaterial = new THREE.PointsMaterial({
             color: 0xaaaaaa,
             map:smokeTexture,
-            size: 0.5,
+            size: 2,
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,
@@ -145,9 +156,13 @@
         const smokeSystem = new THREE.Points(smokeGeometry, smokeMaterial);
         smokeParticles.add(smokeSystem);
         scene.add(smokeParticles);
+        updateUVs(smokeMaterial, 0, smokeColumns, smokeRows);
 
         // Camera position
         camera.position.set(0, 10, 20);
+        let currentFireFrame = 0;
+        let currentSmokeFrame = 0
+        const animationSpeed = 1;
 
         // Animation loop
         function animate() {
@@ -156,49 +171,75 @@
             updateFireParticles();
             updateSmokeParticles();
             renderer.render(scene, camera);
-        }
 
-        function updateFireParticles() {
-            const positions = particles.attributes.position.array;
-            const velocities = particles.attributes.velocity.array;
-            for (let i = 0; i < particleCount; i++) {
-                positions[i * 3] += velocities[i * 3];
-                positions[i * 3 + 1] += velocities[i * 3 + 1];
-                positions[i * 3 + 2] += velocities[i * 3 + 2];
-
-                if (positions[i * 3 + 1] > 3) {
-                    positions[i * 3] = (Math.random() - 0.5) * 1.5;
-                    positions[i * 3 + 1] = 0;
-                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
-
-                    velocities[i * 3] = (Math.random() - 0.5) * 0.04;
-                    velocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
-                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
-                }
+            // Update frame
+            if (performance.now() % animationSpeed < 16) { // Change this condition to suit your animation speed
+                currentFireFrame = (currentFireFrame + 1) % totalFireFrames;
+                updateUVs(particleMaterial, currentFireFrame, fireColumns, fireRows);
+                currentSmokeFrame = (currentSmokeFrame + 1) % totalSmokeFrames;
+                updateSmokeUVs(smokeMaterial, currentSmokeFrame, smokeColumns, smokeRows);
+                
             }
-            particles.attributes.position.needsUpdate = true;
         }
 
-        function updateSmokeParticles() {
-            const positions = smokeGeometry.attributes.position.array;
-            const velocities = smokeGeometry.attributes.velocity.array;
-            for (let i = 0; i < smokeParticleCount; i++) {
-                positions[i * 3] += velocities[i * 3];
-                positions[i * 3 + 1] += velocities[i * 3 + 1];
-                positions[i * 3 + 2] += velocities[i * 3 + 2];
+function updateFireParticles() {
+    const positions = particles.attributes.position.array;
+    const velocities = particles.attributes.velocity.array;
+    for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] += velocities[i * 3];
+        positions[i * 3 + 1] += velocities[i * 3 + 1];
+        positions[i * 3 + 2] += velocities[i * 3 + 2];
 
-                if (positions[i * 3 + 1] > 10) { // Increase height limit for smoke
-                    positions[i * 3] = (Math.random() - 0.5) * 1;
-                    positions[i * 3 + 1] = 2; // Reset to higher initial position
-                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
+        if (positions[i * 3 + 1] > 3) {
+            positions[i * 3] = (Math.random() - 0.5) * 1.5;
+            positions[i * 3 + 1] = 0;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
 
-                    velocities[i * 3] = (Math.random() - 0.5) * 0.01;
-                    velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
-                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
-                }
-            }
-            smokeGeometry.attributes.position.needsUpdate = true;
+            velocities[i * 3] = (Math.random() - 0.5) * 0.04;
+            velocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
+
+            // Update UVs for each particle if needed
+            const frame = Math.floor(Math.random() * totalFireFrames);
+            updateUVs(particleMaterial, frame, fireColumns, fireRows);
         }
+    }
+    particles.attributes.position.needsUpdate = true;
+}
+
+function updateSmokeParticles() {
+    const positions = smokeGeometry.attributes.position.array;
+    const velocities = smokeGeometry.attributes.velocity.array;
+    for (let i = 0; i < smokeParticleCount; i++) {
+        positions[i * 3] += velocities[i * 3];
+        positions[i * 3 + 1] += velocities[i * 3 + 1];
+        positions[i * 3 + 2] += velocities[i * 3 + 2];
+
+        if (positions[i * 3 + 1] > 10) { // Increase height limit for smoke
+            positions[i * 3] = (Math.random() - 0.5) * 1;
+            positions[i * 3 + 1] = 2; // Reset to higher initial position
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
+
+            velocities[i * 3] = (Math.random() - 0.5) * 0.01;
+            velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
+            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
+
+            // Update UVs for each particle if needed
+            const frame = Math.floor(Math.random() * totalSmokeFrames);
+            updateSmokeUVs(smokeMaterial, frame, smokeColumns, smokeRows);
+        }
+    }
+    smokeGeometry.attributes.position.needsUpdate = true;
+}
+
+        function updateUVs(material, frame, columns, rows) {
+            const currentColumn = frame % columns;
+            const currentRow = Math.floor(frame / columns);
+            material.map.offset.x = currentColumn / columns;
+            material.map.offset.y = 1 - (currentRow + 1) / rows; // Invert Y axis
+            material.map.repeat.x = 1 / columns;
+            material.map.repeat.y = 1 / rows;
+        }       
 
         animate();
     </script>
