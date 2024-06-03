@@ -32,8 +32,18 @@
         scene.add(directionalLight);
 
         // Firewood arranged in a crisscross pattern with a slight angle
+        const woodTexture = new THREE.TextureLoader().load('textures/wood.jpg'); 
         const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
-        const woodMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const woodMaterial = new THREE.MeshLambertMaterial({ map: woodTexture});
+        
+        //ground generation
+        const grassTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
+        const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
+        const groundMaterial = new THREE.MeshLambertMaterial({ map: grassTexture });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2; // Rotate the ground to be flat
+        ground.position.y = -0.01; // Adjust the position so it sits just below the logs
+        scene.add(ground);
         
         // Positions and rotations for the logs
         const logPositions = [
@@ -58,10 +68,11 @@
         });
 
         // Placeholder for stones around fire
-        const stoneGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-        const stoneMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+        const stoneTexture = new THREE.TextureLoader().load('textures/stone.jpg');
+        const stoneMaterial = new THREE.MeshLambertMaterial({ map:stoneTexture });
         const numStones = 12;
         for (let i = 0; i < numStones; i++) {
+            const stoneGeometry = new THREE.SphereGeometry(Math.random() * (1 - 0.5) + 0.5, 16, 16);
             const angle = (i / numStones) * Math.PI * 2;
             const stone = new THREE.Mesh(stoneGeometry, stoneMaterial);
             stone.position.set(Math.cos(angle) * 2.5, 0.25, Math.sin(angle) * 2.5);
@@ -70,7 +81,7 @@
 
         // Fire particle system
         const fireParticles = new THREE.Group();
-        const particleCount = 400;
+        const particleCount = 500;
         const fireTexture = new THREE.TextureLoader().load('textures/fire.png');
         fireTexture.wrapS = THREE.RepeatWrapping;
         fireTexture.wrapT = THREE.RepeatWrapping;
