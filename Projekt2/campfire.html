@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/libs/tween.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/OBJLoader.js"></script>
     <script>
         // Scene setup
         const scene = new THREE.Scene();
@@ -25,26 +26,27 @@
 
         // Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+        //scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 10, 7.5);
+        directionalLight.position.set(0, 8, 0);
         scene.add(directionalLight);
+        
 
         // Firewood arranged in a crisscross pattern with a slight angle
         const woodTexture = new THREE.TextureLoader().load('textures/wood.jpg'); 
         const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
         const woodMaterial = new THREE.MeshLambertMaterial({ map: woodTexture});
         
-        //ground generation
-        const grassTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
-        const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
-        const groundMaterial = new THREE.MeshLambertMaterial({ map: grassTexture });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2; // Rotate the ground to be flat
-        ground.position.y = -0.01; // Adjust the position so it sits just below the logs
-        scene.add(ground);
-        
+// Ground generation
+const grassTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
+const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
+const groundMaterial = new THREE.MeshLambertMaterial({ map: grassTexture });
+const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+ground.rotation.x = -Math.PI / 2; // Rotate the ground to be flat
+ground.position.y = -0.01; // Adjust the position so it sits just below the logs
+scene.add(ground);
+
         // Positions and rotations for the logs
         const logPositions = [
             { x: -0.5, y: 0.25, z: -0.5, rx: Math.PI / 4, rz: Math.PI / 4 },
@@ -81,7 +83,7 @@
 
         // Fire particle system
         const fireParticles = new THREE.Group();
-        const particleCount = 500;
+        const particleCount = 20;
         const fireTexture = new THREE.TextureLoader().load('textures/fire.png');
         fireTexture.wrapS = THREE.RepeatWrapping;
         fireTexture.wrapT = THREE.RepeatWrapping;
@@ -113,7 +115,7 @@
         const particleMaterial = new THREE.PointsMaterial({
             color: 0xffaa33,
             map: fireTexture,
-            size: 0.6,
+            size: 5,
             transparent: true,
             opacity: 1,
             blending: THREE.AdditiveBlending,
@@ -173,7 +175,7 @@
         camera.position.set(0, 10, 20);
         let currentFireFrame = 0;
         let currentSmokeFrame = 0
-        const animationSpeed = 1;
+        const animationSpeed = 30;
 
         // Animation loop
         function animate() {
@@ -188,7 +190,7 @@
                 currentFireFrame = (currentFireFrame + 1) % totalFireFrames;
                 updateUVs(particleMaterial, currentFireFrame, fireColumns, fireRows);
                 currentSmokeFrame = (currentSmokeFrame + 1) % totalSmokeFrames;
-                updateSmokeUVs(smokeMaterial, currentSmokeFrame, smokeColumns, smokeRows);
+                updateUVs(smokeMaterial, currentSmokeFrame, smokeColumns, smokeRows);
                 
             }
         }
@@ -237,7 +239,7 @@ function updateSmokeParticles() {
 
             // Update UVs for each particle if needed
             const frame = Math.floor(Math.random() * totalSmokeFrames);
-            updateSmokeUVs(smokeMaterial, frame, smokeColumns, smokeRows);
+            updateUVs(smokeMaterial, frame, smokeColumns, smokeRows);
         }
     }
     smokeGeometry.attributes.position.needsUpdate = true;
