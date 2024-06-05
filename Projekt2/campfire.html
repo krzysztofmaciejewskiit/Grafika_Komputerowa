@@ -12,7 +12,6 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/libs/tween.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/OBJLoader.js"></script>
     <script>
         // Scene setup
@@ -38,14 +37,14 @@
         const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
         const woodMaterial = new THREE.MeshLambertMaterial({ map: woodTexture});
         
-// Ground generation
-const grassTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
-const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
-const groundMaterial = new THREE.MeshLambertMaterial({ map: grassTexture });
-const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-ground.rotation.x = -Math.PI / 2; // Rotate the ground to be flat
-ground.position.y = -0.01; // Adjust the position so it sits just below the logs
-scene.add(ground);
+        // Ground generation
+        const groundTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
+        const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
+        const groundMaterial = new THREE.MeshLambertMaterial({ map: groundTexture });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2; // Rotate the ground to be flat
+        ground.position.y = -0.01; // Adjust the position so it sits just below the logs
+        scene.add(ground);
 
         // Positions and rotations for the logs
         const logPositions = [
@@ -54,12 +53,16 @@ scene.add(ground);
             { x: -0.5, y: 0.25, z: 0.5, rx: Math.PI / 4, rz: -Math.PI / 4 },
             { x: 0.5, y: 0.25, z: 0.5, rx: Math.PI / 4, rz: Math.PI / 4 },
             { x: 0, y: 0.25, z: 0, rx: Math.PI / 4, rz: 0 },
-            // Additional logs for a better campfire effect
             { x: -0.6, y: 0.25, z: -0.6, rx: Math.PI / 6, rz: Math.PI / 6 },
             { x: 0.6, y: 0.25, z: -0.6, rx: Math.PI / 6, rz: -Math.PI / 6 },
             { x: -0.6, y: 0.25, z: 0.6, rx: Math.PI / 6, rz: -Math.PI / 6 },
             { x: 0.6, y: 0.25, z: 0.6, rx: Math.PI / 6, rz: Math.PI / 6 },
-            { x: 0, y: 0.25, z: 0, rx: Math.PI / 6, rz: 0 }
+            { x: 0, y: 0.25, z: 0, rx: Math.PI / 6, rz: 0 },
+            { x: -0.6, y: 0.25, z: -0.6, rx: -Math.PI / 3, rz: -Math.PI / 2 },
+            { x: 0.6, y: 0.25, z: -0.6, rx: -Math.PI / 3, rz: Math.PI / 3 },
+            { x: -0.6, y: 0.25, z: 0.6, rx: -Math.PI / 3, rz: Math.PI / 4 },
+            { x: 0.6, y: 0.25, z: 0.6, rx: -Math.PI / 3, rz: -Math.PI / 6 },
+            { x: 0, y: 0.25, z: 0, rx: -Math.PI / 6, rz: 0.25 }
         ];
 
         logPositions.forEach(pos => {
@@ -69,7 +72,7 @@ scene.add(ground);
             scene.add(log);
         });
 
-        // Placeholder for stones around fire
+        // Stones around the fire
         const stoneTexture = new THREE.TextureLoader().load('textures/stone.jpg');
         const stoneMaterial = new THREE.MeshLambertMaterial({ map:stoneTexture });
         const numStones = 12;
@@ -195,55 +198,55 @@ scene.add(ground);
             }
         }
 
-function updateFireParticles() {
-    const positions = particles.attributes.position.array;
-    const velocities = particles.attributes.velocity.array;
-    for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] += velocities[i * 3];
-        positions[i * 3 + 1] += velocities[i * 3 + 1];
-        positions[i * 3 + 2] += velocities[i * 3 + 2];
+        function updateFireParticles() {
+            const positions = particles.attributes.position.array;
+            const velocities = particles.attributes.velocity.array;
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] += velocities[i * 3];
+                positions[i * 3 + 1] += velocities[i * 3 + 1];
+                positions[i * 3 + 2] += velocities[i * 3 + 2];
 
-        if (positions[i * 3 + 1] > 3) {
-            positions[i * 3] = (Math.random() - 0.5) * 1.5;
-            positions[i * 3 + 1] = 0;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
+                if (positions[i * 3 + 1] > 3) {
+                    positions[i * 3] = (Math.random() - 0.5) * 1.5;
+                    positions[i * 3 + 1] = 0;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
 
-            velocities[i * 3] = (Math.random() - 0.5) * 0.04;
-            velocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
-            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
+                    velocities[i * 3] = (Math.random() - 0.5) * 0.04;
+                    velocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
+                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
 
-            // Update UVs for each particle if needed
-            const frame = Math.floor(Math.random() * totalFireFrames);
-            updateUVs(particleMaterial, frame, fireColumns, fireRows);
+                    // Update UVs for each particle if needed
+                    const frame = Math.floor(Math.random() * totalFireFrames);
+                    updateUVs(particleMaterial, frame, fireColumns, fireRows);
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
         }
-    }
-    particles.attributes.position.needsUpdate = true;
-}
 
-function updateSmokeParticles() {
-    const positions = smokeGeometry.attributes.position.array;
-    const velocities = smokeGeometry.attributes.velocity.array;
-    for (let i = 0; i < smokeParticleCount; i++) {
-        positions[i * 3] += velocities[i * 3];
-        positions[i * 3 + 1] += velocities[i * 3 + 1];
-        positions[i * 3 + 2] += velocities[i * 3 + 2];
+        function updateSmokeParticles() {
+            const positions = smokeGeometry.attributes.position.array;
+            const velocities = smokeGeometry.attributes.velocity.array;
+            for (let i = 0; i < smokeParticleCount; i++) {
+                positions[i * 3] += velocities[i * 3];
+                positions[i * 3 + 1] += velocities[i * 3 + 1];
+                positions[i * 3 + 2] += velocities[i * 3 + 2];
 
-        if (positions[i * 3 + 1] > 10) { // Increase height limit for smoke
-            positions[i * 3] = (Math.random() - 0.5) * 1;
-            positions[i * 3 + 1] = 2; // Reset to higher initial position
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
+                if (positions[i * 3 + 1] > 10) { // Increase height limit for smoke
+                    positions[i * 3] = (Math.random() - 0.5) * 1;
+                    positions[i * 3 + 1] = 2; // Reset to higher initial position
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 1;
 
-            velocities[i * 3] = (Math.random() - 0.5) * 0.01;
-            velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
-            velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
+                    velocities[i * 3] = (Math.random() - 0.5) * 0.01;
+                    velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
+                    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
 
-            // Update UVs for each particle if needed
-            const frame = Math.floor(Math.random() * totalSmokeFrames);
-            updateUVs(smokeMaterial, frame, smokeColumns, smokeRows);
+                    // Update UVs for each particle if needed
+                    const frame = Math.floor(Math.random() * totalSmokeFrames);
+                    updateUVs(smokeMaterial, frame, smokeColumns, smokeRows);
+                }
+            }
+            smokeGeometry.attributes.position.needsUpdate = true;
         }
-    }
-    smokeGeometry.attributes.position.needsUpdate = true;
-}
 
         function updateUVs(material, frame, columns, rows) {
             const currentColumn = frame % columns;
