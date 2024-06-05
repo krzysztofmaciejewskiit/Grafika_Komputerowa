@@ -44,8 +44,13 @@
         const wallWidth = 25; // Width same as ground for the sides
         const wallDepth = 25; // Depth same as ground for the front and back
         const wallTexture = new THREE.TextureLoader().load('textures/forest.jpg', function(texture) {
-    texture.offset.set(0, 0.3); // Adjust this value to offset the texture on the y-axis
-});
+        const repeatX = 1; // Repeat value for X-axis, adjust as needed
+        const repeatY = 0.7; // Repeat value for Y-axis, adjust as needed to cut the top part
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(repeatX, repeatY);
+        texture.offset.set(0, 1 - repeatY); // Offset to control which part of the texture is visible
+        });
         const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture});
 
         // Front wall
