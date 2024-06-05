@@ -25,19 +25,12 @@
 
         // Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        //scene.add(ambientLight);
+        scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         directionalLight.position.set(0, 8, 0);
         scene.add(directionalLight);
-        
-
-        // Firewood arranged in a crisscross pattern with a slight angle
-        const woodTexture = new THREE.TextureLoader().load('textures/wood.jpg'); 
-        const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
-        const woodMaterial = new THREE.MeshLambertMaterial({ map: woodTexture});
-        
-        // Ground generation
+         // Ground generation
         const groundTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
         const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
         const groundMaterial = new THREE.MeshLambertMaterial({ map: groundTexture });
@@ -46,6 +39,47 @@
         ground.position.y = -0.01; // Adjust the position so it sits just below the logs
         scene.add(ground);
 
+        // Wall generation
+        const wallHeight = 25; // Adjust height of walls as needed
+        const wallWidth = 25; // Width same as ground for the sides
+        const wallDepth = 25; // Depth same as ground for the front and back
+        const wallTexture = new THREE.TextureLoader().load('textures/forest.jpg', function(texture) {
+    texture.offset.set(0, 0.3); // Adjust this value to offset the texture on the y-axis
+});
+        const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture});
+
+        // Front wall
+        const frontWallGeometry = new THREE.PlaneGeometry(wallWidth, wallHeight);
+        const frontWall = new THREE.Mesh(frontWallGeometry, wallMaterial);
+        frontWall.position.set(0, wallHeight / 2, -12.5); // Adjust position
+        scene.add(frontWall);
+
+        // Back wall
+        const backWallGeometry = new THREE.PlaneGeometry(wallWidth, wallHeight);
+        const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+        backWall.rotation.y = Math.PI; // Rotate to face the ground
+        backWall.position.set(0, wallHeight / 2, 12.5); // Adjust position
+        scene.add(backWall);
+
+        // Left wall
+        const leftWallGeometry = new THREE.PlaneGeometry(wallDepth, wallHeight);
+        const leftWall = new THREE.Mesh(leftWallGeometry, wallMaterial);
+        leftWall.rotation.y = Math.PI / 2; // Rotate to face the ground
+        leftWall.position.set(-12.5, wallHeight / 2, 0); // Adjust position
+        scene.add(leftWall);
+
+        // Right wall
+        const rightWallGeometry = new THREE.PlaneGeometry(wallDepth, wallHeight);
+        const rightWall = new THREE.Mesh(rightWallGeometry, wallMaterial);
+        rightWall.rotation.y = -Math.PI / 2; // Rotate to face the ground
+        rightWall.position.set(12.5, wallHeight / 2, 0); // Adjust position
+        scene.add(rightWall);
+
+        // Firewood arranged in a crisscross pattern with a slight angle
+        const woodTexture = new THREE.TextureLoader().load('textures/wood.jpg'); 
+        const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
+        const woodMaterial = new THREE.MeshLambertMaterial({ map: woodTexture});
+        
         // Positions and rotations for the logs
         const logPositions = [
             { x: -0.5, y: 0.25, z: -0.5, rx: Math.PI / 4, rz: Math.PI / 4 },
