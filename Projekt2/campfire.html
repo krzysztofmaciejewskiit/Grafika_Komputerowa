@@ -106,12 +106,21 @@
             scene.add(log);
         });
 
+        // circle of sand under the campfire
+        const sandTexture = new THREE.TextureLoader().load('textures/sand.jpg');
+        const sandGeometry = new THREE.CircleGeometry(2.4, 64);
+        const sandMaterial = new THREE.MeshLambertMaterial({ map: sandTexture });
+        const sandCircle = new THREE.Mesh(sandGeometry, sandMaterial);
+        sandCircle.rotation.x = -Math.PI / 2; // Rotate to be flat
+        sandCircle.position.y = 0; // Adjust position
+        scene.add(sandCircle);
+
         // Stones around the fire
         const stoneTexture = new THREE.TextureLoader().load('textures/stone.jpg');
         const stoneMaterial = new THREE.MeshLambertMaterial({ map:stoneTexture });
         const numStones = 12;
         for (let i = 0; i < numStones; i++) {
-            const stoneGeometry = new THREE.SphereGeometry(Math.random() * (1 - 0.5) + 0.5, 16, 16);
+            const stoneGeometry = new THREE.SphereGeometry(Math.random() * (1 - 0.6) + 0.6, 16, 16);
             const angle = (i / numStones) * Math.PI * 2;
             const stone = new THREE.Mesh(stoneGeometry, stoneMaterial);
             stone.position.set(Math.cos(angle) * 2.5, 0.25, Math.sin(angle) * 2.5);
