@@ -12,7 +12,7 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/libs/tween.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/OBJLoader.js"></script>
     <script>
         // Scene setup
         const scene = new THREE.Scene();
@@ -27,13 +27,63 @@
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(5, 10, 7.5);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 8, 0);
         scene.add(directionalLight);
+         // Ground generation
+        const groundTexture = new THREE.TextureLoader().load('textures/dirt.jpg');
+        const groundGeometry = new THREE.PlaneGeometry(25, 25); // Adjust the size as needed
+        const groundMaterial = new THREE.MeshLambertMaterial({ map: groundTexture });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2; // Rotate the ground to be flat
+        ground.position.y = -0.01; // Adjust the position so it sits just below the logs
+        scene.add(ground);
+
+        // Wall generation
+        const wallHeight = 25; // Adjust height of walls as needed
+        const wallWidth = 25; // Width same as ground for the sides
+        const wallDepth = 25; // Depth same as ground for the front and back
+        const wallTexture = new THREE.TextureLoader().load('textures/forest.jpg', function(texture) {
+        const repeatX = 1; // Repeat value for X-axis, adjust as needed
+        const repeatY = 0.7; // Repeat value for Y-axis, adjust as needed to cut the top part
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(repeatX, repeatY);
+        texture.offset.set(0, 1 - repeatY); // Offset to control which part of the texture is visible
+        });
+        const wallMaterial = new THREE.MeshLambertMaterial({ map: wallTexture});
+
+        // Front wall
+        const frontWallGeometry = new THREE.PlaneGeometry(wallWidth, wallHeight);
+        const frontWall = new THREE.Mesh(frontWallGeometry, wallMaterial);
+        frontWall.position.set(0, wallHeight / 2, -12.5); // Adjust position
+        scene.add(frontWall);
+
+        // Back wall
+        const backWallGeometry = new THREE.PlaneGeometry(wallWidth, wallHeight);
+        const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+        backWall.rotation.y = Math.PI; // Rotate to face the ground
+        backWall.position.set(0, wallHeight / 2, 12.5); // Adjust position
+        scene.add(backWall);
+
+        // Left wall
+        const leftWallGeometry = new THREE.PlaneGeometry(wallDepth, wallHeight);
+        const leftWall = new THREE.Mesh(leftWallGeometry, wallMaterial);
+        leftWall.rotation.y = Math.PI / 2; // Rotate to face the ground
+        leftWall.position.set(-12.5, wallHeight / 2, 0); // Adjust position
+        scene.add(leftWall);
+
+        // Right wall
+        const rightWallGeometry = new THREE.PlaneGeometry(wallDepth, wallHeight);
+        const rightWall = new THREE.Mesh(rightWallGeometry, wallMaterial);
+        rightWall.rotation.y = -Math.PI / 2; // Rotate to face the ground
+        rightWall.position.set(12.5, wallHeight / 2, 0); // Adjust position
+        scene.add(rightWall);
 
         // Firewood arranged in a crisscross pattern with a slight angle
+        const woodTexture = new THREE.TextureLoader().load('textures/wood.jpg'); 
         const woodGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
-        const woodMaterial = new THREE.MeshLambertMaterial({ color: 0x8B4513 });
+        const woodMaterial = new THREE.MeshLambertMaterial({ map: woodTexture});
         
         // Positions and rotations for the logs
         const logPositions = [
@@ -42,12 +92,16 @@
             { x: -0.5, y: 0.25, z: 0.5, rx: Math.PI / 4, rz: -Math.PI / 4 },
             { x: 0.5, y: 0.25, z: 0.5, rx: Math.PI / 4, rz: Math.PI / 4 },
             { x: 0, y: 0.25, z: 0, rx: Math.PI / 4, rz: 0 },
-            // Additional logs for a better campfire effect
             { x: -0.6, y: 0.25, z: -0.6, rx: Math.PI / 6, rz: Math.PI / 6 },
             { x: 0.6, y: 0.25, z: -0.6, rx: Math.PI / 6, rz: -Math.PI / 6 },
             { x: -0.6, y: 0.25, z: 0.6, rx: Math.PI / 6, rz: -Math.PI / 6 },
             { x: 0.6, y: 0.25, z: 0.6, rx: Math.PI / 6, rz: Math.PI / 6 },
-            { x: 0, y: 0.25, z: 0, rx: Math.PI / 6, rz: 0 }
+            { x: 0, y: 0.25, z: 0, rx: Math.PI / 6, rz: 0 },
+            { x: -0.6, y: 0.25, z: -0.6, rx: -Math.PI / 3, rz: -Math.PI / 2 },
+            { x: 0.6, y: 0.25, z: -0.6, rx: -Math.PI / 3, rz: Math.PI / 3 },
+            { x: -0.6, y: 0.25, z: 0.6, rx: -Math.PI / 3, rz: Math.PI / 4 },
+            { x: 0.6, y: 0.25, z: 0.6, rx: -Math.PI / 3, rz: -Math.PI / 6 },
+            { x: 0, y: 0.25, z: 0, rx: -Math.PI / 6, rz: 0.25 }
         ];
 
         logPositions.forEach(pos => {
@@ -57,11 +111,21 @@
             scene.add(log);
         });
 
-        // Placeholder for stones around fire
-        const stoneGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-        const stoneMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+        // circle of sand under the campfire
+        const sandTexture = new THREE.TextureLoader().load('textures/sand.jpg');
+        const sandGeometry = new THREE.CircleGeometry(2.4, 64);
+        const sandMaterial = new THREE.MeshLambertMaterial({ map: sandTexture });
+        const sandCircle = new THREE.Mesh(sandGeometry, sandMaterial);
+        sandCircle.rotation.x = -Math.PI / 2; // Rotate to be flat
+        sandCircle.position.y = 0; // Adjust position
+        scene.add(sandCircle);
+
+        // Stones around the fire
+        const stoneTexture = new THREE.TextureLoader().load('textures/stone.jpg');
+        const stoneMaterial = new THREE.MeshLambertMaterial({ map:stoneTexture });
         const numStones = 12;
         for (let i = 0; i < numStones; i++) {
+            const stoneGeometry = new THREE.SphereGeometry(Math.random() * (1 - 0.6) + 0.6, 16, 16);
             const angle = (i / numStones) * Math.PI * 2;
             const stone = new THREE.Mesh(stoneGeometry, stoneMaterial);
             stone.position.set(Math.cos(angle) * 2.5, 0.25, Math.sin(angle) * 2.5);
@@ -70,7 +134,13 @@
 
         // Fire particle system
         const fireParticles = new THREE.Group();
-        const particleCount = 400;
+        const particleCount = 20;
+        const fireTexture = new THREE.TextureLoader().load('textures/fire.png');
+        fireTexture.wrapS = THREE.RepeatWrapping;
+        fireTexture.wrapT = THREE.RepeatWrapping;
+        const fireColumns = 4; // Number of columns in the sprite sheet
+        const fireRows = 4; // Number of rows in the sprite sheet
+        const totalFireFrames = fireColumns * fireRows;
         const particles = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
         const particleVelocities = new Float32Array(particleCount * 3);
@@ -95,9 +165,10 @@
 
         const particleMaterial = new THREE.PointsMaterial({
             color: 0xffaa33,
-            size: 0.3,
+            map: fireTexture,
+            size: 5,
             transparent: true,
-            opacity: 0.8,
+            opacity: 1,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
@@ -105,10 +176,17 @@
         const particleSystem = new THREE.Points(particles, particleMaterial);
         fireParticles.add(particleSystem);
         scene.add(fireParticles);
+        updateUVs(particleMaterial, 0, fireColumns, fireRows);
 
         // Smoke particle system
         const smokeParticles = new THREE.Group();
-        const smokeParticleCount = 200;
+        const smokeParticleCount = 100;
+        const smokeTexture = new THREE.TextureLoader().load('textures/Smoke.png');
+        smokeTexture.wrapS = THREE.RepeatWrapping;
+        smokeTexture.wrapT = THREE.RepeatWrapping;
+        const smokeColumns = 6; // Number of columns in the sprite sheet
+        const smokeRows = 5; // Number of rows in the sprite sheet
+        const totalSmokeFrames = smokeColumns * smokeRows;
         const smokeGeometry = new THREE.BufferGeometry();
         const smokePositions = new Float32Array(smokeParticleCount * 3);
         const smokeVelocities = new Float32Array(smokeParticleCount * 3);
@@ -131,7 +209,8 @@
 
         const smokeMaterial = new THREE.PointsMaterial({
             color: 0xaaaaaa,
-            size: 1,
+            map:smokeTexture,
+            size: 2,
             transparent: true,
             opacity: 0.5,
             blending: THREE.AdditiveBlending,
@@ -141,9 +220,13 @@
         const smokeSystem = new THREE.Points(smokeGeometry, smokeMaterial);
         smokeParticles.add(smokeSystem);
         scene.add(smokeParticles);
+        updateUVs(smokeMaterial, 0, smokeColumns, smokeRows);
 
         // Camera position
         camera.position.set(0, 10, 20);
+        let currentFireFrame = 0;
+        let currentSmokeFrame = 0
+        const animationSpeed = 30;
 
         // Animation loop
         function animate() {
@@ -152,6 +235,15 @@
             updateFireParticles();
             updateSmokeParticles();
             renderer.render(scene, camera);
+
+            // Update frame
+            if (performance.now() % animationSpeed < 16) { // Change this condition to suit your animation speed
+                currentFireFrame = (currentFireFrame + 1) % totalFireFrames;
+                updateUVs(particleMaterial, currentFireFrame, fireColumns, fireRows);
+                currentSmokeFrame = (currentSmokeFrame + 1) % totalSmokeFrames;
+                updateUVs(smokeMaterial, currentSmokeFrame, smokeColumns, smokeRows);
+                
+            }
         }
 
         function updateFireParticles() {
@@ -170,6 +262,10 @@
                     velocities[i * 3] = (Math.random() - 0.5) * 0.04;
                     velocities[i * 3 + 1] = 0.04 + Math.random() * 0.02;
                     velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.04;
+
+                    // Update UVs for each particle if needed
+                    const frame = Math.floor(Math.random() * totalFireFrames);
+                    updateUVs(particleMaterial, frame, fireColumns, fireRows);
                 }
             }
             particles.attributes.position.needsUpdate = true;
@@ -191,10 +287,23 @@
                     velocities[i * 3] = (Math.random() - 0.5) * 0.01;
                     velocities[i * 3 + 1] = 0.02 + Math.random() * 0.02;
                     velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
+
+                    // Update UVs for each particle if needed
+                    const frame = Math.floor(Math.random() * totalSmokeFrames);
+                    updateUVs(smokeMaterial, frame, smokeColumns, smokeRows);
                 }
             }
             smokeGeometry.attributes.position.needsUpdate = true;
         }
+
+        function updateUVs(material, frame, columns, rows) {
+            const currentColumn = frame % columns;
+            const currentRow = Math.floor(frame / columns);
+            material.map.offset.x = currentColumn / columns;
+            material.map.offset.y = 1 - (currentRow + 1) / rows; // Invert Y axis
+            material.map.repeat.x = 1 / columns;
+            material.map.repeat.y = 1 / rows;
+        }       
 
         animate();
     </script>
